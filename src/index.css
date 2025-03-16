@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Define the keyframe animation for directional gradient flow */
+@keyframes flowingGradient {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+/* Apply the animation */
+.animate-flowing-gradient {
+    background: linear-gradient(120deg, #3d74c6, #c477da, #5c5dd5);
+    background-size: 300% 300%;
+    animation: flowingGradient 10s ease-in-out infinite;
+    filter: brightness(0.85) contrast(1.1) saturate(0.8);
+}
