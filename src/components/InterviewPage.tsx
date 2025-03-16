@@ -86,17 +86,15 @@ export default function InterviewPage() {
                         {
                             role: "system",
                             content: `
-                              Resume: ${resumeText || "No resume provided."}
-                              Job Description: ${jobDescription || "No job description provided."}
-                              You are an AI job interviewer. Your job is to assess candidates based on their resume and job description.
-                              - Ask one question at a time.
-                              - After each question, stop, and wait for the user to answer.
-                              - Follow-up questions are allowed if the user asks for more information.
-                              - First, Ask **one behavioral question**.
-                              - Second Ask **one question about their resume**.
-                              - Third, Ask **one technical question related to the job description**.
-                              - Fourth, Ask **one LeetCode-style coding question**.
-                            `
+                                      Resume: ${resumeText || "No resume provided."}
+                                      Job Description: ${jobDescription || "No job description provided."}
+                                      You are an AI job interviewer. Your job is to ask **one question at a time**, then conclude the interview. in the following order:
+                                    
+                                      1.  ask a **question about their resume**.
+                                      2. After the user responds, ask a **technical question related to the job description**.
+                                      3. Thanks the user for using the app, give some critical conclusion on their interview performance.
+                                    `
+
                         },
                         { role: "user", content: text },
                     ],

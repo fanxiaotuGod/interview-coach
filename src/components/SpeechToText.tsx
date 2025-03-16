@@ -5,6 +5,9 @@ export default function SpeechToText({ onSpeechResult }: { onSpeechResult: (text
     const [isListening, setIsListening] = useState(false);
     const [transcript, setTranscript] = useState("");
 
+    // Time in milliseconds to wait after the user stops speaking before recognizing the speech
+    const [pauseTimeout, setPauseTimeout] = useState(4500);  // 3 seconds default
+
     useEffect(() => {
         if (!("webkitSpeechRecognition" in window)) {
             alert("Your browser does not support speech recognition. Try Chrome.");
@@ -17,6 +20,7 @@ export default function SpeechToText({ onSpeechResult }: { onSpeechResult: (text
         recognition.continuous = false;
         recognition.interimResults = false;
         recognition.lang = "en-US";
+        recognition.maxAlternatives = 1;
 
         recognition.onstart = () => {
             setIsListening(true);
@@ -33,7 +37,16 @@ export default function SpeechToText({ onSpeechResult }: { onSpeechResult: (text
         recognition.onerror = () => setIsListening(false);
         recognition.onend = () => setIsListening(false);
 
+        // Start speech recognition and listen for a pause for 3 seconds (adjustable)
         recognition.start();
+
+        // Add a timeout that waits for a longer period of silence before considering it a finished response
+        setTimeout(() => {
+            if (isListening) {
+                // Stop listening after the timeout
+                recognition.stop();
+            }
+        }, pauseTimeout); // Adjust this to change the pause delay before stopping
     };
 
     return (
