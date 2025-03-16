@@ -3,6 +3,7 @@ import SpeechToText from "./components/SpeechToText";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
+
 export default function App() {
     const [userSpeech, setUserSpeech] = useState("");
     const [aiResponse, setAiResponse] = useState("");
@@ -12,7 +13,6 @@ export default function App() {
         if (!text.trim()) return;
 
         setAiResponse("Thinking...");
-
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -36,7 +36,9 @@ export default function App() {
     };
 
     return (
+      
         <UIWrapper>
+       
             <motion.h1 className="text-4xl font-bold text-center text-black mb-6">
                 🚀 AI Interview Coach
             </motion.h1>
