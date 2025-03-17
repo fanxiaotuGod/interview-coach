@@ -43,6 +43,7 @@ export default function InterviewPage() {
     // Function to make AI speak its response using OpenAI API
     const playAIResponse = async (text: string) => {
         try {
+            console.log("api key", import.meta.env.VITE_OPENAI_API_KEY);
             const response = await fetch("https://api.openai.com/v1/audio/speech", {
                 method: "POST",
                 headers: {
@@ -62,6 +63,27 @@ export default function InterviewPage() {
             audio.play();
         } catch (error) {
             console.error("❌ Error playing AI response:", error);
+        }
+    };
+
+    // Function to send interview details to the backend
+    const sendInterviewDetails = async (details: object) => {
+        try {
+            const response = await fetch("http://localhost:3000/saveInterview", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(details),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            console.log("Interview details sent successfully.");
+        } catch (error) {
+            console.error("❌ Error sending interview details:", error);
         }
     };
 
@@ -118,6 +140,16 @@ export default function InterviewPage() {
             // Move to the next question
             setQuestionIndex(prevIndex => prevIndex + 1);
             setIsWaitingForAnswer(false); // Stop waiting after processing the response
+
+            // Check if the interview is concluded
+            if (questionIndex >= 2) {
+                const interviewDetails = {
+                    resumeText,
+                    jobDescription,
+                    responses: aiResponse,
+                };
+                sendInterviewDetails(interviewDetails);
+            }
         } catch (error) {
             console.error("❌ Error fetching AI response:", error);
             setAiResponse("Error: Could not connect to AI.");
